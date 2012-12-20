@@ -34,7 +34,7 @@ function package_info($key = NULL) {
   $info += array(
     'title' => 'Package',
     'description' => 'Lorem',
-    'version' => '0.1.0',
+    'version' => '0.0.1',
   );
   if ($key === NULL) {
     return $info;

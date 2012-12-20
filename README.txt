@@ -11,6 +11,9 @@ ASSUMPTIONS/REQUIREMENTS:
 
   http://nvie.com/posts/a-successful-git-branching-model
 
+* 0.0.x = alpha release
+* 0.1.x = beta release
+* 0.2.x = release candidate
 
 
 INSTALLATION:
