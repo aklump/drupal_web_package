@@ -72,6 +72,15 @@
 filename='package.info';
 
 ##
+ # Show Info if requested
+ #
+if [ "$1" == 'info' ]
+then
+  cat *.info;
+  exit;
+fi
+
+##
  # Explode shortcuts
  #
 if [ "$1" == 'hotfix' ]
@@ -100,7 +109,7 @@ then
   echo
   echo 'Package Version Bump'
   echo '--------------------'
-  echo "Arg 1 is one of: major, minor, bug, hotfix, release"
+  echo "Arg 1 is one of: major, minor, bug, hotfix, release, or info"
   echo "Arg 2 is one of: hotfix, release"
   echo
   exit
