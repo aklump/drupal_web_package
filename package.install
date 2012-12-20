@@ -1,0 +1,80 @@
+<?php
+/**
+ * @file
+ * Handles installation steps for package
+ *
+ * @ingroup func_search
+ * @{
+ */
+
+/**
+ * Implements hook_requirements().
+ *
+ * Checks installation requirements and do status reporting.
+ * http://api.drupal.org/api/function/hook_requirements
+ *
+ * @param phase 'install' or 'runtime':
+ * @return A keyed array of requirements
+ */
+function package_requirements($phase) {
+  $reqs = array();
+  $t = get_t();
+  if ($phase == 'runtime') {
+    if (!($file = package_filepath()) ||
+        !file_exists($file) ||
+        !($info = package_info())) {
+      $reqs['package'] = array(
+        'weight' => -1000,
+        'title' => $t('Package Info'),
+        'value' => $t('Not Found'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => $t('Please create or complete the package file at: @path', array(
+          '@path' => url($file),
+        )),
+      );
+    }
+    else {
+      $reqs['package'] = array(
+        'weight' => -1000,
+        'title' => $info['title'],
+        'value' => $info['version'],
+        'severity' => REQUIREMENT_INFO,
+      );
+    }
+  }
+  return $reqs;
+}
+
+/**
+ * Implements hook_install().
+ */
+function package_install() {
+  $t = get_t();
+  if (!($file = package_filepath())) {
+    drupal_set_message($t('Invalid package info file path: @path', array(
+      '@path' => $file,
+    )));
+  }
+  elseif (!file_exists($file)) {
+    $info = package_info();
+    $output = array();
+    foreach ($info as $key => $value) {
+      $output[] = "$key = $value";
+    }
+    $output = implode("\n", $output) . "\n";
+    if (!($handle = fopen($file, 'w'))) {
+      drupal_set_message($t('Please manually create @url.', array(
+        '@url' => url($file),
+      )), 'error');
+    }
+    else {
+      fwrite($handle, $output);
+      fclose($handle);
+      drupal_set_message($t('@url has been created, please update it now with your package information.', array(
+        '@url' => url($file),
+      )), 'warning');
+    }
+  }
+}
+
+/** @} */ //end of group package

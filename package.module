@@ -1,0 +1,43 @@
+<?php
+/**
+ * @file
+ * Base module file for package
+ *
+ * @defgroup package Package
+ * @{
+ */
+
+/**
+ * Return the path to the package info file
+ */
+function package_filepath() {
+  return trim(variable_get('package_filepath', 'package.info'), '/');
+}
+
+/**
+ * Parse the package.info file
+ *
+ * @param string $key
+ *   A specific info key.
+ *
+ * @return mixed
+ *   If key is not provided the entire array is returned.
+ */
+function package_info($key = NULL) {
+  if (!($file = package_filepath())) {
+    return array();
+  }
+  $info = array();
+  if (file_exists($file)) {
+    $info = parse_ini_file($file);
+  }
+  $info += array(
+    'title' => 'Package',
+    'description' => 'Lorem',
+    'version' => '0.1.0',
+  );
+  if ($key === NULL) {
+    return $info;
+  }
+  return array_key_exists($key, $info) ? $info[$key] : NULL;
+}
