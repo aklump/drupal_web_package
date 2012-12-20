@@ -1,4 +1,4 @@
 name = Package
 description = Allows tracking of Drupal-based applications as a package
 package = Other
-core = 7.x
+core = 7.x-1.0
