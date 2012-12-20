@@ -142,9 +142,14 @@ function increment_version () {
   fi
   case $1 in
      major)
-       part[0]=$((${part[0]} + 1));;
+       part[0]=$((${part[0]} + 1))
+       part[1]=0
+       part[2]=0
+       ;;
      minor)
-       part[1]=$((${part[1]} + 1));;
+       part[1]=$((${part[1]} + 1))
+       part[2]=0
+       ;;
      *)
        part[2]=$((${part[2]} + 1));;
   esac
