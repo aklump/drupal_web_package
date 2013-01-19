@@ -16,13 +16,13 @@
  * @param phase 'install' or 'runtime':
  * @return A keyed array of requirements
  */
-function package_requirements($phase) {
+function web_package_requirements($phase) {
   $reqs = array();
   $t = get_t();
   if ($phase == 'runtime') {
-    if (!($file = package_filepath()) ||
+    if (!($file = web_package_filepath()) ||
         !file_exists($file) ||
-        !($info = package_info())) {
+        !($info = web_package_info())) {
       $reqs['package'] = array(
         'weight' => -1000,
         'title' => $t('Package Info'),
@@ -36,7 +36,7 @@ function package_requirements($phase) {
     else {
       $reqs['package'] = array(
         'weight' => -1000,
-        'title' => $info['title'],
+        'title' => $info['name'],
         'value' => $info['version'],
         'severity' => REQUIREMENT_INFO,
       );
@@ -48,15 +48,15 @@ function package_requirements($phase) {
 /**
  * Implements hook_install().
  */
-function package_install() {
+function web_package_install() {
   $t = get_t();
-  if (!($file = package_filepath())) {
-    drupal_set_message($t('Invalid package info file path: @path', array(
+  if (!($file = web_package_filepath())) {
+    drupal_set_message($t('Invalid website package info file path: @path', array(
       '@path' => $file,
     )));
   }
   elseif (!file_exists($file)) {
-    $info = package_info();
+    $info = web_package_info();
     $output = array();
     foreach ($info as $key => $value) {
       $output[] = "$key = $value";
@@ -70,7 +70,7 @@ function package_install() {
     else {
       fwrite($handle, $output);
       fclose($handle);
-      drupal_set_message($t('@url has been created, please update it now with your package information.', array(
+      drupal_set_message($t('@url has been created, please update it now with your website package information.', array(
         '@url' => url($file),
       )), 'warning');
     }

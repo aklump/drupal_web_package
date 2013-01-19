@@ -14,12 +14,12 @@
 #
 #   As promised there are special values for the first argument. The first of
 #   these is 'hotfix'. Pass this as argument one and it is equivalent to the
-#   following: . git-loft.sh bug hotfix So it saves you typing 'bug' The other
+#   following: . bump.sh bug hotfix So it saves you typing 'bug' The other
 #   special value is 'release', which is equivalent to the following: .
 #   git-loft.sh minor release.
 #
 #   In the event that you are releasing a new major release you would need to
-#   call . git-loft.sh major release
+#   call . bump.sh major release
 #
 # CREDITS:
 # In the Loft Studios
@@ -69,7 +69,7 @@
 ##
  # The name of the file that holds your version string
  #
-filename='package.info';
+filename='web_package.info';
 
 ##
  # Show Info if requested
@@ -104,10 +104,10 @@ fi
 ##
  # Prompt if invalid input
  #
-if [ ! "$severity" ] || [ ! "$branch" ]
+if [ ! "$severity" ]
 then
   echo
-  echo 'Package Version Bump'
+  echo 'Web Package Version Bump'
   echo '--------------------'
   echo "Arg 1 is one of: major, minor, bug, hotfix, release, or info"
   echo "Arg 2 is one of: hotfix, release"
@@ -168,10 +168,10 @@ then
     echo 'Operation cancelled.'
     exit
   fi
-  echo 'name = Custom Package' > $filename
-  echo 'description = Lorem' >> $filename
+  echo 'title = Web Package' > $filename
+  echo 'description = Lorem ipsum dolar' >> $filename
   echo 'version = 0.0.0' >> $filename
-  echo "$filename file was created."
+  echo "$filename file was created. Please edit it's contents."
 fi
 
 version=$(grep "version" $filename | cut -f2 -d "=");

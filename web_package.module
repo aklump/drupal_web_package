@@ -10,12 +10,12 @@
 /**
  * Return the path to the package info file
  */
-function package_filepath() {
-  return trim(variable_get('package_filepath', 'package.info'), '/');
+function web_package_filepath() {
+  return trim(variable_get('web_package_filepath', 'web_package.info'), '/');
 }
 
 /**
- * Parse the package.info file
+ * Parse the web_package.info file
  *
  * @param string $key
  *   A specific info key.
@@ -23,8 +23,8 @@ function package_filepath() {
  * @return mixed
  *   If key is not provided the entire array is returned.
  */
-function package_info($key = NULL) {
-  if (!($file = package_filepath())) {
+function web_package_info($key = NULL) {
+  if (!($file = web_package_filepath())) {
     return array();
   }
   $info = array();
@@ -32,8 +32,8 @@ function package_info($key = NULL) {
     $info = parse_ini_file($file);
   }
   $info += array(
-    'title' => 'Package',
-    'description' => 'Lorem',
+    'name' => 'Web Package',
+    'description' => 'Lorem ipsum dolar',
     'version' => '0.0.1',
   );
   if ($key === NULL) {

@@ -27,7 +27,7 @@ CONFIGURATION:
   will have to manually create this file. If you need to alter the name from
   package.info, then add the following line to your settings.php file:
 
-  $conf['package_filepath'] = 'some_other_name.info';
+  $conf['web_package_filepath'] = 'some_other_name.info';
 
 * Once this file is created you need to manually edit it with the correct
   package information. A note on version schema. This module expects the
