@@ -168,7 +168,7 @@ then
     echo 'Operation cancelled.'
     exit
   fi
-  echo 'title = Web Package' > $filename
+  echo 'name = Web Package' > $filename
   echo 'description = Lorem ipsum dolar' >> $filename
   echo 'version = 0.0.0' >> $filename
   echo "$filename file was created. Please edit it's contents."
