@@ -179,6 +179,7 @@ previous=$version;
 
 # Increment the version based on $branch
 increment_version $severity
+echo "Version bumped: $previous ---> $version";
 
 # Replace in file
 sed -i.bak "s/version *= *${previous}/version = $version/1" $filename
