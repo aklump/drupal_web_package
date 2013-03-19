@@ -168,8 +168,10 @@ then
     echo 'Operation cancelled.'
     exit
   fi
-  echo 'name = Web Package' > $filename
-  echo 'description = Lorem ipsum dolar' >> $filename
+  read -e -p "Enter package name: " name
+  read -e -p "Enter package description: " description
+  echo "name = $name" > $filename
+  echo "description = $description" >> $filename
   echo 'version = 0.0.0' >> $filename
   echo "$filename file was created. Please edit it's contents."
 fi
