@@ -37,6 +37,7 @@ function web_package_requirements($phase) {
       $reqs['package'] = array(
         'weight' => -1000,
         'title' => $info['name'],
+        'description' => $info['description'],
         'value' => $info['version'],
         'severity' => REQUIREMENT_INFO,
       );
@@ -49,7 +50,6 @@ function web_package_requirements($phase) {
  * Implements hook_install().
  */
 function web_package_install() {
-  module_load_include('module', 'web_package', 'web_package');
   $t = get_t();
   if (!($file = web_package_filepath())) {
     drupal_set_message($t('Invalid website package info file path: @path', array(
@@ -71,11 +71,21 @@ function web_package_install() {
     else {
       fwrite($handle, $output);
       fclose($handle);
-      drupal_set_message($t('@url has been created, please update it now with your website package information.', array(
+      drupal_set_message($t('<strong>@url</strong> has been created, please update it now with your website package information.', array(
         '@url' => url($file),
       )), 'warning');
     }
   }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function web_package_uninstall() {
+  module_load_include('module', 'web_package', 'web_package');
+  drupal_set_message(t('To completly remove this module you may want to manually delete: %file.', array(
+    '%file' => web_package_filepath(),
+  )), 'warning');
 }
 
 /** @} */ //end of group package
