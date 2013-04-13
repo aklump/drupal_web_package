@@ -60,7 +60,15 @@ function web_package_install() {
     $info = web_package_info();
     $output = array();
     foreach ($info as $key => $value) {
-      $output[] = "$key = $value";
+      switch ($key) {
+        case 'name':
+        case 'description':
+          $output[] = "$key = \"$value\"";
+          break;
+        default:
+          $output[] = "$key = $value";
+          break;
+      }
     }
     $output = implode("\n", $output) . "\n";
     if (!($handle = fopen($file, 'w'))) {
