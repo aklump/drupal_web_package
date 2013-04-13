@@ -35,7 +35,9 @@ CONFIGURATION:
   the web_package shell script if you want).
 
 * If for some reason you're package information is not located in
-  web_package.info, you should set the following line to your settings.php file:
+  web_package.info, you should set the following line to your settings.php file.
+  YOU SHOULD DO THIS BEFORE INSTALLING SINCE THE MODULE WILL TRY TO CREATE YOUR
+  PACKAGE FILE:
 
   $conf['web_package_filepath'] = 'some_other_name.info';
 
@@ -46,6 +48,23 @@ CONFIGURATION:
 
 * Note that when 1.2.9 increments, it goes to 1.2.10, NOT 1.3.0; each portion of
   the version can increment to as high a number as needed.
+
+
+TROUBLESHOOTING:
+* Make sure to wrap your name and description in double quotes to prevent parse
+  errors when reading your package information.
+
+This is wrong and will probably break the status page:
+@code
+name = My Module (Not Yours)
+description = It's really cool
+@endcode
+
+This is correct (has double quotes around values)
+@code
+name = "My Module (Not Yours)"
+description = "It's really cool"
+@endcode
 
 
 USAGE:

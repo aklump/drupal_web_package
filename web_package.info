@@ -1,4 +1,4 @@
-name = Website Package
+name = Web Package
 description = Allows release tracking of your website as a software package.
 package = Other
 core = 6.x
