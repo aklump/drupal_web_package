@@ -2,4 +2,4 @@ name = Web Package
 description = Allows release tracking of your website as a software package.
 package = Other
 core = 7.x
-version = 7.x-1.4-rc1
+version = 7.x-1.4-rc2
