@@ -71,6 +71,11 @@ USAGE:
 * To view package information from Drupal visit: admin/reports/status
 * Read about using web_package.sh in the files contained with that package
 
+
+CACHE BUSTING:
+* You can use this module to generate cache-busting urls based on the package
+  version. See web_package_cache_buster_url() for more info.
+
 --------------------------------------------------------
 CONTACT:
 In the Loft Studios

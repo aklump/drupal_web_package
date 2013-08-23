@@ -24,20 +24,41 @@ function web_package_filepath() {
  *   If key is not provided the entire array is returned.
  */
 function web_package_info($key = NULL) {
-  if (!($file = web_package_filepath())) {
-    return array();
+  $info = &drupal_static(__FUNCTION__, array());
+  if (empty($info)) {
+    $info = array();
+    if (($file = web_package_filepath())
+        && file_exists($file)
+        && ($info = parse_ini_file($file))) {
+      $info += array(
+        'name' => 'Web Package',
+        'description' => 'Lorem ipsum dolar',
+        'version' => '0.0.1',
+      );
+    }
   }
-  $info = array();
-  if (file_exists($file)) {
-    $info = parse_ini_file($file);
-  }
-  $info += array(
-    'name' => 'Web Package',
-    'description' => 'Lorem ipsum dolar',
-    'version' => '0.0.1',
-  );
   if ($key === NULL) {
     return $info;
   }
   return array_key_exists($key, $info) ? $info[$key] : NULL;
+}
+
+/**
+ * Create an url that will bust browser cache based on package version
+ *
+ * @param string $path
+ * @param array $options
+ * @param string $key
+ *   (Optional) Defaults to 'vs'. If this conflicts with your query than you may
+     set the key with this param.
+ *
+ * @return
+ *  A string containing a URL to the given path.
+ *
+ * @see url()
+ */
+function web_package_cache_buster_url($path = NULL, $options = array(), $key = 'vs') {
+  $options['query'][$key] = web_package_info('version');
+
+  return url($path, $options);
 }
