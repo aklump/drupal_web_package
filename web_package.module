@@ -23,9 +23,9 @@ function web_package_filepath() {
  * @return mixed
  *   If key is not provided the entire array is returned.
  */
-function web_package_info($key = NULL) {
-  $info = &drupal_static(__FUNCTION__, array());
-  if (empty($info)) {
+function web_package_info($key = NULL, $reset = FALSE) {
+  static $info = array();
+  if (empty($info) || $reset) {
     $info = array();
     if (($file = web_package_filepath())
         && file_exists($file)
@@ -50,7 +50,7 @@ function web_package_info($key = NULL) {
  * @param array $options
  * @param string $key
  *   (Optional) Defaults to 'vs'. If this conflicts with your query than you may
-     set the key with this param.
+ *   set the key with this param.
  *
  * @return
  *  A string containing a URL to the given path.
