@@ -50,7 +50,7 @@ function web_package_info($key = NULL) {
  * @param array $options
  * @param string $key
  *   (Optional) Defaults to 'vs'. If this conflicts with your query than you may
-     set the key with this param.
+ *   set the key with this param.
  *
  * @return
  *  A string containing a URL to the given path.
@@ -61,4 +61,29 @@ function web_package_cache_buster_url($path = NULL, $options = array(), $key = '
   $options['query'][$key] = web_package_info('version');
 
   return url($path, $options);
+}
+
+function web_package_admin_menu_output_build(&$content) {
+  if (($info = web_package_info())
+    && isset($info['version'])) {
+    $content['menu']['web_package'] = array(
+      '#title' => t('v@version', array('@version' => $info['version'])), 
+      '#weight' => 0, 
+      '#href' => 'admin/reports/status',
+      '#attributes' => array(
+        //admin-menu-action: floats it right
+        'class' => array('admin-menu-action', 'admin-menu-menu', 'web-package-version'), 
+      ), 
+    );
+  }
+}
+
+/**
+ * Implements hook_loft_deploy_title_pre_alter().
+ */
+function web_package_loft_deploy_title_pre_alter(&$title) {
+  if (($info = web_package_info())
+    && isset($info['version'])) {
+    $title .= t(' ~ Ver: @version', array('@version' => $info['version']));
+  }
 }
