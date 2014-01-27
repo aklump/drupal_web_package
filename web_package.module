@@ -62,3 +62,13 @@ function web_package_cache_buster_url($path = NULL, $options = array(), $key = '
 
   return url($path, $options);
 }
+
+/**
+ * Implements hook_loft_deploy_title_pre_alter().
+ */
+function web_package_loft_deploy_title_pre_alter(&$title) {
+  if (($info = web_package_info())
+    && isset($info['version'])) {
+    $title .= t(' ~ Ver: @version', array('@version' => $info['version']));
+  }
+}
