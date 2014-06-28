@@ -22,6 +22,8 @@ function web_package_filepath() {
  *
  * @return mixed
  *   If key is not provided the entire array is returned.
+ *   - file: will be the path to the info file if found.
+ *   - installed bool If web package info file was located.
  */
 function web_package_info($key = NULL) {
   $info = &drupal_static(__FUNCTION__, array());
@@ -36,6 +38,8 @@ function web_package_info($key = NULL) {
         'version' => '0.0.1',
       );
     }
+    $info['file'] = empty($file) ? NULL : $file;
+    $info['installed'] = !empty($file);
   }
   if ($key === NULL) {
     return $info;
