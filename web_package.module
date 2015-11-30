@@ -48,6 +48,15 @@ function web_package_info($key = NULL) {
 }
 
 /**
+ * Return the current version.
+ *
+ * @return  string ready for version_compare()
+ */
+function web_package_get_version() {
+  return (string) ($v = web_package_info('version')) ? $v : variable_get('web_package_default_version', '1.0');
+}
+
+/**
  * Create an url that will bust browser cache based on package version
  *
  * @param string $path
