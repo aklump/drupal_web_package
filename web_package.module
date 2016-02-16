@@ -11,7 +11,12 @@
  * Return the path to the package info file
  */
 function web_package_filepath() {
-  return trim(variable_get('web_package_filepath', 'web_package.info'), '/');
+  static $path = NULL;
+  if (!isset($path)) {
+    $path = realpath(variable_get('web_package_filepath', 'web_package.info'));
+  }
+
+  return $path;
 }
 
 /**

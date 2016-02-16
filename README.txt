@@ -39,7 +39,7 @@ CONFIGURATION:
   YOU SHOULD DO THIS BEFORE INSTALLING SINCE THE MODULE WILL TRY TO CREATE YOUR
   PACKAGE FILE:
 
-  $conf['web_package_filepath'] = 'some_other_name.info';
+  $conf['web_package_filepath'] = DRUPAL_ROOT . '/../some_other_name_above_web_root.info';
 
 * Once this file is created you need to manually edit it with the correct
   package information. A note on version schema. This module expects the
