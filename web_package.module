@@ -8,96 +8,56 @@
  */
 
 /**
- * Return the path to the package info file
+ * @return mixed
+ * @deprecated Use \Drupal::service('web_package')->getInfoFilepath() instead.
  */
 function web_package_filepath() {
-  static $path = NULL;
-  if (!isset($path)) {
-    $path = realpath(variable_get('web_package_filepath', 'web_package.info'));
-  }
-
-  return $path;
+  return \Drupal::service('web_package')->getInfoFilepath();
 }
 
 /**
- * Parse the web_package.info file
- *
- * @param string $key
- *   A specific info key.
- *
  * @return mixed
- *   If key is not provided the entire array is returned.
- *   - file: will be the path to the info file if found.
- *   - installed bool If web package info file was located.
+ * @deprecated Use \Drupal::service('web_package')->getInfo() instead.
  */
-function web_package_info($key = NULL) {
-  $info = &drupal_static(__FUNCTION__, array());
-  if (empty($info)) {
-    $info = array();
-    if (($file = web_package_filepath())
-      && file_exists($file)
-      && ($info = parse_ini_file($file))) {
-      $info += array(
-        'name' => 'Web Package',
-        'description' => 'Lorem ipsum dolar',
-        'version' => '0.0.1',
-      );
-    }
-    $info['file'] = empty($file) ? NULL : $file;
-    $info['installed'] = !empty($file);
-  }
-  if ($key === NULL) {
-    return $info;
-  }
+function web_package_info() {
+  return \Drupal::service('web_package')->getInfo();
 
-  return array_key_exists($key, $info) ? $info[$key] : NULL;
 }
 
 /**
- * Return the current version.
- *
- * @return  string ready for version_compare()
+ * @return mixed
+ * @deprecated Use \Drupal::service('web_package')->getVersion() instead.
  */
 function web_package_get_version() {
-  return (string) ($v = web_package_info('version')) ? $v : variable_get('web_package_default_version', '1.0');
+  return \Drupal::service('web_package')->getVersion();
 }
 
 /**
- * Create an url that will bust browser cache based on package version
- *
- * @param string $path
- * @param array $options
- * @param string $key
- *   (Optional) Defaults to 'vs'. If this conflicts with your query than you may
- *   set the key with this param.
- *
- * @return
- *  A string containing a URL to the given path.
- *
- * @see url()
+ * @return mixed
+ * @deprecated use \Drupal::service('web_package')->createCacheBusterUrl()
+ *   instead.
  */
-function web_package_cache_buster_url($path = NULL, $options = array(), $key = 'vs') {
-  $options['query'][$key] = web_package_info('version');
-
-  return url($path, $options);
+function web_package_cache_buster_url() {
+  return \Drupal::service('web_package')
+    ->createCacheBusterUrl($path = NULL, $options = [], $key = 'vs');
 }
 
 function web_package_admin_menu_output_build(&$content) {
-  if (($info = web_package_info())
+  if (($info = \Drupal::service('web_package')->getInfo())
     && isset($info['version'])) {
-    $content['menu']['web_package'] = array(
-      '#title' => t('v@version', array('@version' => $info['version'])),
+    $content['menu']['web_package'] = [
+      '#title' => t('v@version', ['@version' => $info['version']]),
       '#weight' => 0,
       '#href' => 'admin/reports/status',
-      '#attributes' => array(
+      '#attributes' => [
         //admin-menu-action: floats it right
-        'class' => array(
+        'class' => [
           'admin-menu-action',
           'admin-menu-menu',
           'web-package-version',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 }
 
@@ -105,8 +65,13 @@ function web_package_admin_menu_output_build(&$content) {
  * Implements hook_loft_deploy_title_pre_alter().
  */
 function web_package_loft_deploy_title_pre_alter(&$title) {
-  if (($info = web_package_info())
-    && isset($info['version'])) {
-    $title .= t(' ~ Ver: @version', array('@version' => $info['version']));
+  try {
+    if (($info = \Drupal::service('web_package')->getInfo())
+      && isset($info['version'])) {
+      $title .= t(' ~ Ver: @version', ['@version' => $info['version']]);
+    }
+  }
+  catch (\Exception $exception) {
+    watchdog_exception('web_package', $exception);
   }
 }

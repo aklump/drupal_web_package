@@ -8,83 +8,38 @@
  * Implements hook_requirements().
  */
 function web_package_requirements($phase) {
-  $reqs = array();
-  $t = get_t();
+  $reqs = [];
+  $web_package = \Drupal::service('web_package');
+  $t = 't';
   if ($phase == 'runtime') {
-    if (!($file = web_package_filepath()) ||
+    if (!($file = $web_package
+        ->getInfoFilePath(()) ||
       !file_exists($file) ||
-      !($info = web_package_info())) {
-      $reqs['package'] = array(
-        'weight' => -1000,
-        'title' => $t('Package Info'),
-        'value' => $t('Not Found'),
-        'severity' => REQUIREMENT_WARNING,
-        'description' => $t('Please create or complete the package file at: @path', array(
-          '@path' => url($file),
-        )),
-      );
-    }
+      !($info = $web_package->getInfo())){
+         // @FIXME
+         // url() expects a route name or an external URI.
+         // $reqs['package'] = array(
+         //         'weight' => -1000,
+         //         'title' => $t('Package Info'),
+         //         'value' => $t('Not Found'),
+         //         'severity' => REQUIREMENT_WARNING,
+         //         'description' => $t('Please create or complete the package file at: @path', array(
+         //           '@path' => url($file),
+         //         )),
+         //       );
+
+         }
     else {
-      $reqs['package'] = array(
+      $reqs['package'] = [
         'weight' => -1000,
         'title' => $info['name'],
         'description' => $info['description'],
         'value' => $info['version'],
         'severity' => REQUIREMENT_INFO,
-      );
+      ];
     }
   }
 
   return $reqs;
 }
 
-/**
- * Implements hook_install().
- */
-function web_package_install() {
-  $t = get_t();
-  module_load_include('module', 'web_package', 'web_package');
-  if (!($file = web_package_filepath())) {
-    drupal_set_message($t('Invalid website package info file path: @path', array(
-      '@path' => $file,
-    )));
-  }
-  elseif (!file_exists($file)) {
-    $info = web_package_info();
-    $output = array();
-    foreach ($info as $key => $value) {
-      switch ($key) {
-        case 'name':
-        case 'description':
-          $output[] = "$key = \"$value\"";
-          break;
-        default:
-          $output[] = "$key = $value";
-          break;
-      }
-    }
-    $output = implode("\n", $output) . "\n";
-    if (!($handle = fopen($file, 'w'))) {
-      drupal_set_message($t('Please manually create @url.', array(
-        '@url' => url($file),
-      )), 'error');
-    }
-    else {
-      fwrite($handle, $output);
-      fclose($handle);
-      drupal_set_message($t('<strong>@url</strong> has been created, please update it now with your website package information.', array(
-        '@url' => url($file),
-      )), 'warning');
-    }
-  }
-}
-
-/**
- * Implements hook_uninstall().
- */
-function web_package_uninstall() {
-  module_load_include('module', 'web_package', 'web_package');
-  drupal_set_message(t('To completly remove this module you may want to manually delete: %file.', array(
-    '%file' => web_package_filepath(),
-  )), 'warning');
-}

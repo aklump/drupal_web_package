@@ -1,90 +1,87 @@
                                   Web Package
 
-   Web Package
-
 Summary
 
-   Defines a framework for tracking Drupal projects as a single package.
-   Supports name, description and version string (major.minor.micro).
-   Provides UI elements native to Drupal for viewing this information.
+   Provides a framework for reading project data, namely your project's
+   version, into Drupal. For example you may use composer.json as the
+   source of your information; or you can use a standalone YAML file. In
+   all cases it is important that your data file provides the following
+   keys, at least: version, title, description. The data is exposed to
+   developer's through a new service interface. This is a very simple,
+   lightweight module, with a real sense of purpose.
 
-   This is loosely related to web_package
-   (https://github.com/aklump/web_package) a shell script to automatically
-   bump your version numbers, create hotfix and release branches and
-   automatically tag releases, in that this module is able to read the
-   tracking data created by web_package.sh.
+Features
+
+     * Enhances the [1]Status report by displaying the project info
+       (title, description, version) above the core version info.
+     * Enhances Loft Deploy module by adding the project version to the
+       displayed title.
+     * Enhances admin_menu by displaying the version in the top bar.
 
 Quick Start
 
-Requirements
+    1. Create one of the following files types (.yml, .info, .json, .ini)
+       somewhere in your codebase. This example will place a yaml file one
+       directory above web root, called web_package.yml. You can use a
+       composer.json file if you want, as long as you place a version key
+       in the root level of the file.
+    2. Add the following as the contents of that file. Other keys are
+       supported and you may add whatever you wish.
+title: My Project
+description: A cool project indeed
+version: 1.0.0
 
-     * version string needs to follow this format: [major].[minor].[micro]
-     * You are using the gitflow method described here:
-       http://nvie.com/posts/a-successful-git-branching-model
-     * 0.0.x = alpha release
-     * 0.1.x = beta release
-     * 0.2.x = release candidate
+    3. Identify your data file in settings.php or settings.local.php like
+       this:
+$config['web_package.settings']['filepath'] = DRUPAL_ROOT . '/../web_package.yml
+';
+
+    4. Now, enable this module and visit the [2]Status report.
+    5. You should see the information on that page, you may have to scroll
+       down.
+    6. Now set up some means beyond this module, to increment the version
+       string in web_package.yml as appropriate to your development/build
+       process.
 
 Contributing
 
-   If you find this project useful... please consider [1]making a
+   If you find this project useful... please consider [3]making a
    donation.
 
-Installation
+Developers
 
-    1. Download and install web_package from
-       https://github.com/aklump/web_package; follow the README.txt file
-       therein. This is the shell script component of this module. It is
-       not necessary, but highly recommended.
-    2. Download and unzip this module into your modules directory.
-    3. Goto Administer > Site Building > Modules and enable this module.
+   Unless you set up some means of updating the version string as your
+   project goes through it's build process, this module is not very
+   helpful. So you will need to make arrangements to do that.
 
-Configuration
+  API
 
-     * When installing this module a file will be created (if possible) in
-       the web root, called web_package.info. If the web root is not
-       writable by the server, then you will have to manually create this
-       file (you can follow the steps in the web_package shell script if
-       you want).
-     * If for some reason you're package information is not located in
-       web_package.info, you should set the following line to your
-       settings.php file. YOU SHOULD DO THIS BEFORE INSTALLING SINCE THE
-       MODULE WILL TRY TO CREATE YOUR PACKAGE FILE:
-$conf['web_package_filepath'] = DRUPAL_ROOT . '/../some_other_name_above_web_roo
-t.info';
-
-     * Once this file is created you need to manually edit it with the
-       correct package information. A note on version schema. This module
-       expects the following convention for package versioning:
-       [major].[minor].[micro] e.g. 1.2.34. (That final period is for the
-       sentence not the version number.)
-     * Note that when 1.2.9 increments, it goes to 1.2.10, NOT 1.3.0; each
-       portion of the version can increment to as high a number as needed.
-
-Usage
-
-     * To view package information from Drupal visit: admin/reports/status
-     * Read about using web_package.sh in the files contained with that
-       package
+   Developers may use the following in their custom code.
+\Drupal::service('web_package')->getVersion();
+\Drupal::service('web_package')->getInfo();
+\Drupal::service('web_package')->createCacheBusterUrl();
+\Drupal::service('web_package')->getInfoFilePath();
 
   Cache Busting
 
      * You can use this module to generate cache-busting urls based on the
        package version. See web_package_cache_buster_url() for more info.
 
-Troubleshooting
+  A Tool To Manage Versions
 
-     * Make sure to wrap your name and description in double quotes to
-       prevent parse errors when reading your package information.
+     * Read about a tool by the author of this module, [4]web_package.sh,
+       which handles version incrementing. This project stems from that
+       one, but doesn't require it.
 
-   This is wrong and will probably break the status page:
-    name = My Module (Not Yours)
-    description = It's really cool
+Roadmap
 
-   This is correct (has double quotes around values)
-    name = "My Module (Not Yours)"
-    description = "It's really cool"
+     * [ ] roadmap: Improve the placement of the info on the [5]Status
+       report.
 
 References
 
-   1. https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4E5KZHDQCEUV8&item_name=Gratitude%20for%20aklump%2Fweb_package
+   1. file:///admin/reports/status
+   2. file:///admin/reports/status
+   3. https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4E5KZHDQCEUV8&item_name=Gratitude%20for%20aklump%2Fweb_package
+   4. https://github.com/aklump/web_package
+   5. file:///admin/reports/status

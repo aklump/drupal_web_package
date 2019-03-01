@@ -1,0 +1,8 @@
+web_package.settings:
+  type: mapping
+  label: Settings
+  mapping:
+    filepath:
+      type: string
+    default_version:
+      type: string

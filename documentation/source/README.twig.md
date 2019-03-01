@@ -55,4 +55,4 @@ Developers may use the following in their custom code.
 
 ## Module Roadmap
 
-- [ ] roadmap: Improve the placement of the info on the [Status report](/admin/reports/status).
+{% include('_tasklist.md') %}
