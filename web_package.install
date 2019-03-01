@@ -2,20 +2,10 @@
 /**
  * @file
  * Handles installation steps for package
- *
- * @ingroup func_search
- * @{
  */
 
 /**
  * Implements hook_requirements().
- *
- * Checks installation requirements and do status reporting.
- * http://api.drupal.org/api/function/hook_requirements
- *
- * @param phase 'install' or 'runtime':
- *
- * @return A keyed array of requirements
  */
 function web_package_requirements($phase) {
   $reqs = array();
@@ -98,5 +88,3 @@ function web_package_uninstall() {
     '%file' => web_package_filepath(),
   )), 'warning');
 }
-
-/** @} */ //end of group package
