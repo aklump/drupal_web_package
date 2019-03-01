@@ -1,6 +1,6 @@
 # Web Package
 
-![Web Package](images/web-package.jpg)
+![Web Package](docs/images/web-package.jpg)
 
 ## Summary
 
