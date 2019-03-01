@@ -35,8 +35,8 @@ function web_package_info($key = NULL) {
   if (empty($info)) {
     $info = array();
     if (($file = web_package_filepath())
-        && file_exists($file)
-        && ($info = parse_ini_file($file))) {
+      && file_exists($file)
+      && ($info = parse_ini_file($file))) {
       $info += array(
         'name' => 'Web Package',
         'description' => 'Lorem ipsum dolar',
@@ -49,6 +49,7 @@ function web_package_info($key = NULL) {
   if ($key === NULL) {
     return $info;
   }
+
   return array_key_exists($key, $info) ? $info[$key] : NULL;
 }
 
@@ -85,13 +86,17 @@ function web_package_admin_menu_output_build(&$content) {
   if (($info = web_package_info())
     && isset($info['version'])) {
     $content['menu']['web_package'] = array(
-      '#title' => t('v@version', array('@version' => $info['version'])), 
-      '#weight' => 0, 
+      '#title' => t('v@version', array('@version' => $info['version'])),
+      '#weight' => 0,
       '#href' => 'admin/reports/status',
       '#attributes' => array(
         //admin-menu-action: floats it right
-        'class' => array('admin-menu-action', 'admin-menu-menu', 'web-package-version'), 
-      ), 
+        'class' => array(
+          'admin-menu-action',
+          'admin-menu-menu',
+          'web-package-version',
+        ),
+      ),
     );
   }
 }
