@@ -1,5 +1,5 @@
 name = Web Package
 description = Allows release tracking of your website as a software package.
-package = "In the Loft Studios"
+package = In the Loft Studios
 core = 7.x
-version = "7.x-1.4-rc8"
+version = 7.x-1.4
