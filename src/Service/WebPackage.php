@@ -13,6 +13,9 @@ class WebPackage {
 
   /**
    * Return the path to the package info file.
+   *
+   * @throws \RuntimeException
+   *   If the info filepath doesn't exist as a file.
    */
   public function getInfoFilePath() {
     static $path = NULL;
@@ -37,22 +40,24 @@ class WebPackage {
    *   If key is not provided the entire array is returned.
    *   - file: will be the path to the info file if found.
    *   - installed bool If web package info file was located.
+   *   - name
+   *   - description
+   *   - version
    */
   public function getInfo($key = NULL) {
     $info = &drupal_static(__FUNCTION__, []);
     if (empty($info)) {
       $info = [];
-      if (($file = $this->getInfoFilePath())
-        && file_exists($file)
-        && ($info = $this->parseFile($file))) {
-        $info += [
-          'name' => 'Web Package',
-          'description' => 'Lorem ipsum dolar',
-          'version' => '0.0.1',
-        ];
+      try {
+        $info['file'] = $this->getInfoFilePath();
+        $info = $this->parseFile($info['file']);
+        $info['installed'] = TRUE;
       }
-      $info['file'] = empty($file) ? NULL : $file;
-      $info['installed'] = !empty($file);
+      catch (\Exception $exception) {
+        $info['file'] = NULL;
+        $info['installed'] = FALSE;
+      }
+      $info += array_fill_keys(['name', 'description', 'version'], NULL);
     }
     if ($key === NULL) {
       return $info;

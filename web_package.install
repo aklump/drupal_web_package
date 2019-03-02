@@ -8,35 +8,42 @@
  * Implements hook_requirements().
  */
 function web_package_requirements($phase) {
-  $reqs = [];
-  $web_package = \Drupal::service('web_package');
   $t = 't';
+  $reqs = [];
+  $reqs['package'] = [
+    'title' => $t('Web Package'),
+    'weight' => -1000,
+  ];
+  $web_package = \Drupal::service('web_package');
   if ($phase == 'runtime') {
-    if (!($file = $web_package
-        ->getInfoFilePath(()) ||
-      !file_exists($file) ||
-      !($info = $web_package->getInfo())){
-         // @FIXME
-         // url() expects a route name or an external URI.
-         // $reqs['package'] = array(
-         //         'weight' => -1000,
-         //         'title' => $t('Package Info'),
-         //         'value' => $t('Not Found'),
-         //         'severity' => REQUIREMENT_WARNING,
-         //         'description' => $t('Please create or complete the package file at: @path', array(
-         //           '@path' => url($file),
-         //         )),
-         //       );
-
-         }
-    else {
+    try {
+      $file = $web_package->getInfoFilePath();
+    }
+    catch (\Exception $exception) {
+      // Purposefully left blank.
+    }
+    if (!$file) {
       $reqs['package'] = [
-        'weight' => -1000,
-        'title' => $info['name'],
-        'description' => $info['description'],
-        'value' => $info['version'],
-        'severity' => REQUIREMENT_INFO,
-      ];
+          'value' => $t('Info file missing'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => $t('Add <code>$config["web_package.settings"]["filepath"]</code> to settings.php, with the filepath to your info/version file.  See the Web Package module\'s README for more info.'),
+        ] + $reqs['package'];
+    }
+    elseif (!$web_package->getVersion()) {
+      $reqs['package'] = [
+          'value' => $t('Info file missing version.'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => $t('Your info file "' . $file . '" does not contain <code>version</code>.  Add a version string to that file.'),
+        ] + $reqs['package'];
+    }
+    else {
+      $info = $web_package->getInfo();
+      $reqs['package'] = [
+          'title' => $info['name'],
+          'description' => $info['description'],
+          'value' => $info['version'],
+          'severity' => REQUIREMENT_INFO,
+        ] + $reqs['package'];
     }
   }
 
