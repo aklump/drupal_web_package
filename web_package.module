@@ -7,62 +7,37 @@
  * @{
  */
 
-/**
- * @return mixed
- * @deprecated Use \Drupal::service('web_package')->getInfoFilepath() instead.
- */
-function web_package_filepath() {
-  return \Drupal::service('web_package')->getInfoFilepath();
-}
+use Drupal\Core\Url;
 
 /**
- * @return mixed
- * @deprecated Use \Drupal::service('web_package')->getInfo() instead.
+ * Implements hook_toolbar_alter().
+ *
+ * Add the version to the Toolbar.
  */
-function web_package_info() {
-  return \Drupal::service('web_package')->getInfo();
-
-}
-
-/**
- * @return mixed
- * @deprecated Use \Drupal::service('web_package')->getVersion() instead.
- */
-function web_package_get_version() {
-  return \Drupal::service('web_package')->getVersion();
-}
-
-/**
- * @return mixed
- * @deprecated use \Drupal::service('web_package')->createCacheBusterUrl()
- *   instead.
- */
-function web_package_cache_buster_url() {
-  return \Drupal::service('web_package')
-    ->createCacheBusterUrl($path = NULL, $options = [], $key = 'vs');
-}
-
-function web_package_admin_menu_output_build(&$content) {
-  if (($info = \Drupal::service('web_package')->getInfo())
-    && isset($info['version'])) {
-    $content['menu']['web_package'] = [
-      '#title' => t('v@version', ['@version' => $info['version']]),
-      '#weight' => 0,
-      '#href' => 'admin/reports/status',
-      '#attributes' => [
-        //admin-menu-action: floats it right
-        'class' => [
-          'admin-menu-action',
-          'admin-menu-menu',
-          'web-package-version',
-        ],
-      ],
-    ];
+function web_package_toolbar_alter(&$items) {
+  $lowest_weight = 0;
+  foreach ($items as $item) {
+    $weight = isset($item['#weight']) ? $item['#weight'] : 0;
+    $lowest_weight = min($lowest_weight, $weight);
   }
+  $items['web_package'] = [
+    '#type' => 'toolbar_item',
+    '#weight' => $lowest_weight - 1,
+    '#wrapper_attributes' => [
+      'class' => ['contextual-toolbar-tab'],
+    ],
+    'tab' => [
+      '#type' => 'link',
+      '#title' => \Drupal::service('web_package')->getVersion(),
+      '#url' => Url::fromRoute('system.status'),
+    ],
+  ];
 }
 
 /**
  * Implements hook_loft_deploy_title_pre_alter().
+ *
+ * Add the version to the title.
  */
 function web_package_loft_deploy_title_pre_alter(&$title) {
   try {
