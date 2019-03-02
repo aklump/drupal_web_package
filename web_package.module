@@ -56,3 +56,17 @@ function web_package_loft_deploy_title_pre_alter(&$title) {
     watchdog_exception('web_package', $exception);
   }
 }
+
+/**
+ * Implements hook_preprocess_status_report_general_info().
+ */
+function web_package_preprocess_status_report_general_info(&$vars) {
+  $info = \Drupal::service('web_package')->getInfo();
+  if ($info['name'] && $info['version']) {
+    $vars['drupal']['description'] = t('<strong>:name :version</strong><br/>:description', [
+      ':name' => $info['name'],
+      ':version' => $info['version'],
+      ':description' => $info['description'],
+    ]);
+  }
+}

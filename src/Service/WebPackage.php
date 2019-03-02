@@ -119,7 +119,8 @@ class WebPackage {
    * Return the current version.
    *
    * @return string
-   *   The version string, ready for version_compare().
+   *   The version string, ready for version_compare().  The default version is
+   *   returned by this function.  See getInfo if you do not want the default.
    */
   public function getVersion() {
     $default = $this->configFactory->get('web_package.settings')

@@ -29,7 +29,7 @@ function web_package_requirements($phase) {
           'description' => $t('Add <code>$config["web_package.settings"]["filepath"]</code> to settings.php, with the filepath to your info/version file.  See the Web Package module\'s README for more info.'),
         ] + $reqs['package'];
     }
-    elseif (!$web_package->getVersion()) {
+    elseif (!$web_package->getInfo('version')) {
       $reqs['package'] = [
           'value' => $t('Info file missing version.'),
           'severity' => REQUIREMENT_ERROR,
@@ -37,13 +37,7 @@ function web_package_requirements($phase) {
         ] + $reqs['package'];
     }
     else {
-      $info = $web_package->getInfo();
-      $reqs['package'] = [
-          'title' => $info['name'],
-          'description' => $info['description'],
-          'value' => $info['version'],
-          'severity' => REQUIREMENT_INFO,
-        ] + $reqs['package'];
+      $reqs = [];
     }
   }
 

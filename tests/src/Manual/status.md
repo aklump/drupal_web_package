@@ -19,7 +19,7 @@ The status page displays correctly based on state of info file.
     - Assert the toolbar shows the version in the far right of the toolbar.
 1. Click the toolbar link.    
     - Assert you are taken to the status page.
-    - Assert you see the title, version and description in the _Checked_ area of the status page.    
+    - Assert you see the title, version and description in the _General System Information_ area of the status page, under the _Drupal Version_.
 1. Comment out the filepath in your settings file.
 1. Reload the [Status report](/admin/reports/status)
     - Assert you see and Error for _Web Package_ telling you to add the filepath to settings.
@@ -28,4 +28,5 @@ The status page displays correctly based on state of info file.
 1. Reload the [Status report](/admin/reports/status)
     - Assert you see and Error for _Web Package_ telling you to the version is missing.
 1. Add the version string back.
-
+1. Reload the [Status report](/admin/reports/status)
+    - Assert you see the title, version and description in the _General System Information_ area of the status page, under the _Drupal Version_.
