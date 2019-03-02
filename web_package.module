@@ -21,6 +21,12 @@ function web_package_toolbar_alter(&$items) {
     $highest_weight = max($highest_weight, $weight);
   }
   $items['web_package'] = [
+    // Custom CSS, JS or a library can be associated with the toolbar item.
+    '#attached' => [
+      'library' => [
+        'web_package/core',
+      ],
+    ],
     '#type' => 'toolbar_item',
     '#weight' => $highest_weight + 1,
     '#wrapper_attributes' => [

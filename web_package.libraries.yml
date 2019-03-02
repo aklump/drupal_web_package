@@ -1,0 +1,4 @@
+core:
+  css:
+    layout:
+      web_package.css: {}
