@@ -97,7 +97,7 @@ class WebPackage {
     switch (($ext = pathinfo($path, PATHINFO_EXTENSION))) {
       case 'yaml':
       case 'yml':
-        $info = Yaml::parse($path);
+        $info = Yaml::parse(file_get_contents($path));
         break;
 
       case 'json':
