@@ -46,8 +46,17 @@ Developers may use the following in their custom code.
 
 ### Cache Busting
 
-* You can use this module to generate cache-busting urls based on the package
-  version. See web_package_cache_buster_url() for more info.
+This module provides a service method to add cache busters to URLs, e.g. `?vs=8.x-1.0`, see the example below for usage.
+
+    $url = Url::fromRoute('system.status');
+    $url = \Drupal::service('web_package')
+      ->addCacheBusterToUrl($url)
+      ->toString();
+    // $url === '/admin/reports/status?vs=8.x-1.0'
+    
+The query string var can be customized in _settings.php_ using:
+
+    $config['web_package.settings']['cache_buster'] = 'cb';    
 
 ### A Tool To Manage Versions
 
@@ -56,3 +65,12 @@ Developers may use the following in their custom code.
 ## Module Roadmap
 
 - [ ] roadmap: Improve the placement of the info on the [Status report](/admin/reports/status).
+
+## Upgrade Path Drupal 7 to 8
+
+* Replace all instances of `web_package_filepath` with `\Drupal::service('web_package')->getInfoFilepath()`
+* Replace all instances of `web_package_info` with `\Drupal::service('web_package')->getInfo()`
+* Replace all instances of `web_package_get_version` with `\Drupal::service('web_package')->getVersion()`
+* Replace all instances of `web_package_cache_buster_url` with `\Drupal::service('web_package')->createCacheBusterUrl()`
+* In _settings_ file change `$conf['web_package_filepath'] = DRUPAL_ROOT . '/../web_package.info';` to `$config['web_package.settings']['filepath'] = DRUPAL_ROOT . '/../web_package.info'`
+* Optionally, convert _web_package.info_ to YAML or JSON, if desired.
