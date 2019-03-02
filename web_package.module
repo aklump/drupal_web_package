@@ -43,7 +43,7 @@ function web_package_loft_deploy_title_pre_alter(&$title) {
   try {
     if (($info = \Drupal::service('web_package')->getInfo())
       && isset($info['version'])) {
-      $title .= t(' ~ Ver: @version', ['@version' => $info['version']]);
+      $title .= t(' ~ @version', ['@version' => $info['version']]);
     }
   }
   catch (\Exception $exception) {
