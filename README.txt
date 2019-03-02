@@ -83,9 +83,6 @@ $config['web_package.settings']['cache_buster'] = 'cb';
 
 Module Roadmap
 
-     * [ ] roadmap: Improve the placement of the info on the [5]Status
-       report.
-
 Upgrade Path Drupal 7 to 8
 
      * Replace all instances of web_package_filepath with
@@ -108,4 +105,3 @@ References
    2. file:///admin/reports/status
    3. https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4E5KZHDQCEUV8&item_name=Gratitude%20for%20aklump%2Fweb_package
    4. https://github.com/aklump/web_package
-   5. file:///admin/reports/status
