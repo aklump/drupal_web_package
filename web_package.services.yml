@@ -1,3 +1,4 @@
 services:
   web_package:
     class: Drupal\web_package\Service\WebPackage
+    arguments: ["@config.factory"]

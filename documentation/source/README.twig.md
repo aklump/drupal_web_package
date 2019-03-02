@@ -46,8 +46,17 @@ Developers may use the following in their custom code.
 
 ### Cache Busting
 
-* You can use this module to generate cache-busting urls based on the package
-  version. See web_package_cache_buster_url() for more info.
+This module provides a service method to add cache busters to URLs, e.g. `?vs=8.x-1.0`, see the example below for usage.
+
+    $url = Url::fromRoute('system.status');
+    $url = \Drupal::service('web_package')
+      ->addCacheBusterToUrl($url)
+      ->toString();
+    // $url === '/admin/reports/status?vs=8.x-1.0'
+    
+The query string var can be customized in _settings.php_ using:
+
+    $config['web_package.settings']['cache_buster'] = 'cb';    
 
 ### A Tool To Manage Versions
 

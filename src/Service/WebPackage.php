@@ -2,6 +2,8 @@
 
 namespace Drupal\web_package\Service;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Url;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -12,6 +14,16 @@ use Symfony\Component\Yaml\Yaml;
 class WebPackage {
 
   /**
+   * WebPackage constructor.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   An instance of the config factory.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory) {
+    $this->configFactory = $config_factory;
+  }
+
+  /**
    * Return the path to the package info file.
    *
    * @throws \RuntimeException
@@ -20,7 +32,7 @@ class WebPackage {
   public function getInfoFilePath() {
     static $path = NULL;
     if (!isset($path)) {
-      $path = \Drupal::config('web_package.settings')
+      $path = $this->configFactory->get('web_package.settings')
         ->get('filepath');
       if (!($path = realpath($path))) {
         throw new \RuntimeException("Cannot locate info file \"$path\".");
@@ -110,7 +122,7 @@ class WebPackage {
    *   The version string, ready for version_compare().
    */
   public function getVersion() {
-    $default = \Drupal::config('web_package.settings')
+    $default = $this->configFactory->get('web_package.settings')
       ->get('default_version');
 
     return (string) ($v = $this->getInfo('version')) ? $v : $default;
@@ -119,23 +131,25 @@ class WebPackage {
   /**
    * Create an url that will bust browser cache based on package version.
    *
-   * @param string $path
-   * @param array $options
-   * @param string $key
-   *   (Optional) Defaults to 'vs'. If this conflicts with your query than you
-   *   may set the key with this param.
+   * @param \Drupal\Core\Url $url
+   *   An URL instance.  The query string will have vs={version} added to it.
+   *   To change the key you need to modify your settings file.
    *
-   * @return
-   *  A string containing a URL to the given path.
+   * @return \Drupal\Core\Url
+   *   $url with the cache buster added to the query string.
    *
-   * @see url()
+   * @see web_package.settings.cache_buster
    */
-  public function createCacheBusterUrl($path = NULL, $options = [], $key = 'vs') {
-    $options['query'][$key] = $this->getVersion();
+  public function addCacheBusterToUrl(Url $url) {
+    $key = $this->configFactory->get('web_package.settings')
+      ->get('cache_buster');
+    if (!($query = $url->getOption('query'))) {
+      $query = [];
+    }
+    $query[$key] = $this->getVersion();
+    $url->setOption('query', $query);
 
-    // @FIXME
-    // url() expects a route name or an external URI.
-    // return url($path, $options);
+    return $url;
   }
 
 }

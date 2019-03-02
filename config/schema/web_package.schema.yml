@@ -6,3 +6,5 @@ web_package.settings:
       type: string
     default_version:
       type: string
+    cache_buster:
+      type: string
