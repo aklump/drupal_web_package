@@ -10,3 +10,4 @@ patch_prefix = '-rc'
 preserve_patch_zero = false
 pause = 0
 author = "aklump"
+info_file = web_package.info.yml
