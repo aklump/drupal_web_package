@@ -64,7 +64,6 @@ The query string var can be customized in _settings.php_ using:
 
 ## Module Roadmap
 
-- [ ] roadmap: Improve the placement of the info on the [Status report](/admin/reports/status).
 
 ## Upgrade Path Drupal 7 to 8
 
