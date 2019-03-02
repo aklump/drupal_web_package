@@ -15,16 +15,16 @@ use Drupal\Core\Url;
  * Add the version to the Toolbar.
  */
 function web_package_toolbar_alter(&$items) {
-  $lowest_weight = 0;
+  $highest_weight = 0;
   foreach ($items as $item) {
     $weight = isset($item['#weight']) ? $item['#weight'] : 0;
-    $lowest_weight = min($lowest_weight, $weight);
+    $highest_weight = max($highest_weight, $weight);
   }
   $items['web_package'] = [
     '#type' => 'toolbar_item',
-    '#weight' => $lowest_weight - 1,
+    '#weight' => $highest_weight + 1,
     '#wrapper_attributes' => [
-      'class' => ['contextual-toolbar-tab'],
+      'class' => ['web-package-toolbar-tab'],
     ],
     'tab' => [
       '#type' => 'link',
