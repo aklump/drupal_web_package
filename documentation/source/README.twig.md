@@ -56,3 +56,7 @@ Developers may use the following in their custom code.
 ## Module Roadmap
 
 {% include('_tasklist.md') %}
+
+## Upgrade Path Drupal 7 to 8
+
+{% include('_7to8.md') %}
