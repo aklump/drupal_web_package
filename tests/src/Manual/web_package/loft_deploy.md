@@ -1,5 +1,4 @@
 Test Case ID: loft-deploy
-Test Suite: WebPackage
 Author: Aaron Klump
 Created: March 1, 2019
 ---
