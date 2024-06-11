@@ -34,7 +34,7 @@ function web_package_toolbar_alter(&$items) {
     ],
     'tab' => [
       '#type' => 'link',
-      '#title' => \Drupal::service('web_package')->getVersion(),
+      '#title' => Drupal::service('web_package')->getVersion(),
       '#url' => Url::fromRoute('system.status'),
     ],
   ];
@@ -46,27 +46,20 @@ function web_package_toolbar_alter(&$items) {
  * Add the version to the title.
  */
 function web_package_loft_deploy_title_pre_alter(&$title) {
-  try {
-    if (($info = \Drupal::service('web_package')->getInfo())
-      && isset($info['version'])) {
-      $title .= t(' ~ @version', ['@version' => $info['version']]);
-    }
-  }
-  catch (\Exception $exception) {
-    watchdog_exception('web_package', $exception);
-  }
+  $version = Drupal::service('web_package')->getVersion();
+  $title .= t(' ~ @version', ['@version' => $version]);
 }
 
 /**
  * Implements hook_preprocess_status_report_general_info().
  */
 function web_package_preprocess_status_report_general_info(&$vars) {
-  $info = \Drupal::service('web_package')->getInfo();
-  if ($info['name'] && $info['version']) {
-    $vars['drupal']['description'] = t('<strong>:name :version</strong><br/>:description', [
-      ':name' => $info['name'],
-      ':version' => $info['version'],
-      ':description' => $info['description'],
-    ]);
-  }
+  $service = Drupal::service('web_package');
+  $vars['drupal']['description'][] = [
+    '#type' => 'html_tag',
+    '#tag' => 'h4',
+    '#attributes' => ['class' => ['system-status-general-info__sub-item-title']],
+    '#value' => $service->getName(),
+    '#suffix' => $service->getVersion(),
+  ];
 }

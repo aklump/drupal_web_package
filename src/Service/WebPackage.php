@@ -4,6 +4,9 @@ namespace Drupal\web_package\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Url;
+use Exception;
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -12,6 +15,11 @@ use Symfony\Component\Yaml\Yaml;
  * Provides the functionality of this module to Drupal.
  */
 class WebPackage {
+
+  /**
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  private ConfigFactoryInterface $configFactory;
 
   /**
    * WebPackage constructor.
@@ -29,13 +37,13 @@ class WebPackage {
    * @throws \RuntimeException
    *   If the info filepath doesn't exist as a file.
    */
-  public function getInfoFilePath() {
+  public function getInfoFilePath(): string {
     static $path = NULL;
     if (!isset($path)) {
       $path = $this->configFactory->get('web_package.settings')
         ->get('filepath');
       if (!($path = realpath($path))) {
-        throw new \RuntimeException("Cannot locate info file \"$path\".");
+        throw new RuntimeException("Cannot locate info file \"$path\".");
       }
     }
 
@@ -55,8 +63,14 @@ class WebPackage {
    *   - name
    *   - description
    *   - version
+   *
+   * @deprecated Since version 1.7 , Use getName::(), getVersion::(), getDescription::(),  instead.
    */
   public function getInfo($key = NULL) {
+    return $this->_getInfo($key);
+  }
+
+  private function _getInfo($key = NULL) {
     $info = &drupal_static(__FUNCTION__, []);
     if (empty($info)) {
       $info = [];
@@ -65,7 +79,8 @@ class WebPackage {
         $info = $this->parseFile($info['file']);
         $info['installed'] = TRUE;
       }
-      catch (\Exception $exception) {
+      catch (Exception $exception) {
+        watchdog_exception('web_package', $exception);
         $info['file'] = NULL;
         $info['installed'] = FALSE;
       }
@@ -90,9 +105,9 @@ class WebPackage {
    * @throws \InvalidArgumentException
    *   If $path does not exist, or is a type not understood.
    */
-  protected function parseFile($path) {
+  protected function parseFile(string $path) {
     if (!file_exists($path)) {
-      throw new \InvalidArgumentException("\"$path\" does not exist.");
+      throw new InvalidArgumentException("\"$path\" does not exist.");
     }
     switch (($ext = pathinfo($path, PATHINFO_EXTENSION))) {
       case 'yaml':
@@ -109,7 +124,7 @@ class WebPackage {
         break;
 
       default:
-        throw new \InvalidArgumentException("Cannot understand info file of type \"$ext\".");
+        throw new InvalidArgumentException("Cannot understand info file of type \"$ext\".");
     }
 
     return $info;
@@ -122,11 +137,49 @@ class WebPackage {
    *   The version string, ready for version_compare().  The default version is
    *   returned by this function.  See getInfo if you do not want the default.
    */
-  public function getVersion() {
-    $default = $this->configFactory->get('web_package.settings')
-      ->get('default_version');
+  public function getVersion(): string {
+    try {
+      $version = $this->_getInfo('version');
+      if (empty($version)) {
+        $version = $this->configFactory->get('web_package.settings')
+          ->get('default_version');
+      }
 
-    return (string) ($v = $this->getInfo('version')) ? $v : $default;
+      return (string) $version;
+    }
+    catch (\Exception $exception) {
+      watchdog_exception('web_package', $exception);
+
+      return '0.0.0';
+    }
+  }
+
+  public function getName(): string {
+    try {
+      $name = $this->_getInfo('name');
+      if (empty($name)) {
+        $name = $this->configFactory->get('system.site')->get('name');
+      }
+
+      return (string) $name;
+    }
+    catch (\Exception $exception) {
+      watchdog_exception('web_package', $exception);
+
+      return '';
+    }
+
+  }
+
+  public function getDescription(): string {
+    try {
+      return (string) $this->_getInfo('description') ?? '';
+    }
+    catch (\Exception $exception) {
+      watchdog_exception('web_package', $exception);
+
+      return '';
+    }
   }
 
   /**
@@ -141,7 +194,7 @@ class WebPackage {
    *
    * @see web_package.settings.cache_buster
    */
-  public function addCacheBusterToUrl(Url $url) {
+  public function addCacheBusterToUrl(Url $url): Url {
     $key = $this->configFactory->get('web_package.settings')
       ->get('cache_buster');
     if (!($query = $url->getOption('query'))) {
