@@ -1,3 +1,5 @@
 {
+    "name": "aklump_drupal/web_package",
+    "type": "drupal-custom-module",
     "license": "GPL-2.0-or-later"
 }
