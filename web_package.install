@@ -8,6 +8,9 @@
  * Implements hook_requirements().
  */
 function web_package_requirements($phase) {
+  if ('runtime' !== $phase) {
+    return '';
+  }
   $t = 't';
   $reqs = [];
   $reqs['package'] = [
@@ -15,30 +18,28 @@ function web_package_requirements($phase) {
     'weight' => -1000,
   ];
   $web_package = \Drupal::service('web_package');
-  if ($phase == 'runtime') {
-    try {
-      $file = $web_package->getInfoFilePath();
-    }
-    catch (\Exception $exception) {
-      // Purposefully left blank.
-    }
-    if (empty($file)) {
-      $reqs['package'] = [
-          'value' => $t('Info file missing'),
-          'severity' => REQUIREMENT_ERROR,
-          'description' => $t('Add <code>$config["web_package.settings"]["filepath"]</code> to settings.php, with the filepath to your info/version file.  See the Web Package module\'s README for more info.'),
-        ] + $reqs['package'];
-    }
-    elseif (!$web_package->getInfo('version')) {
-      $reqs['package'] = [
-          'value' => $t('Info file missing version.'),
-          'severity' => REQUIREMENT_ERROR,
-          'description' => $t('Your info file "' . $file . '" does not contain <code>version</code>.  Add a version string to that file.'),
-        ] + $reqs['package'];
-    }
-    else {
-      $reqs = [];
-    }
+  try {
+    $file = $web_package->getInfoFilePath();
+  }
+  catch (\Exception $exception) {
+    // Purposefully left blank.
+  }
+  if (empty($file)) {
+    $reqs['package'] = [
+        'value' => $t('Info file missing'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('Add <code>$config["web_package.settings"]["filepath"]</code> to settings.php, with the filepath to your info/version file.  See the Web Package module\'s README for more info.'),
+      ] + $reqs['package'];
+  }
+  elseif (!$web_package->getInfo('version')) {
+    $reqs['package'] = [
+        'value' => $t('Info file missing version.'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('Your info file "' . $file . '" does not contain <code>version</code>.  Add a version string to that file.'),
+      ] + $reqs['package'];
+  }
+  else {
+    $reqs = [];
   }
 
   return $reqs;
