@@ -10,7 +10,7 @@ Provides a framework for reading project data, namely your project's _version_, 
 * Enhances _Loft Deploy_ module by adding the project version to the displayed name.
 * Enhances _admin_menu_ by displaying the version in the top bar.
 
-##   Install with Composer
+## Install with Composer
 
 1. Because this is an unpublished package, you must define it's repository in
    your project's _composer.json_ file. Add the following to _composer.json_ in
