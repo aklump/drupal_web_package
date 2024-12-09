@@ -14,6 +14,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Nothing to list
 
+## [1.7.1] - 2024-12-09
+
+### Added
+
+- Example images to the README
+
+### Removed
+
+- The function `web_package_loft_deploy_title_pre_alter`. Here is the code so you can implement in your own module if desired.
+
+    ```php
+    /**
+     * Implements hook_loft_deploy_title_pre_alter().
+     *
+     * Add the version to the title.
+     */
+    function MY_MODULE_loft_deploy_title_pre_alter(&$title) {
+      $version = Drupal::service('web_package')->getVersion();
+      $title .= t(' ~ @version', ['@version' => $version]);
+    }
+    ```
+
 ## [1.7.0] - 2024-06-10
 
 ### Added
