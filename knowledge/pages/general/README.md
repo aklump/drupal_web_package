@@ -11,9 +11,8 @@ Provides a framework for reading project data, namely your project's _version_, 
 
 ## Features
 
-* Enhances the [Status report](/admin/reports/status) by displaying the project info (name, description, version) above the core version info.
-* Enhances _Loft Deploy_ module by adding the project version to the displayed name.
-* Enhances _admin_menu_ by displaying the version in the top bar.
+* Enhances the [Status report](/admin/reports/status) by displaying the project info (name, description, version) above the core version info.  ![Info](../../images/info_tile.png)
+* Enhances _admin_menu_ by displaying the version in the top bar.  ![Admin bar](../../images/admin_bar.png)
 
 {{ composer.install|raw }}
 

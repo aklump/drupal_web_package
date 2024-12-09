@@ -41,16 +41,6 @@ function web_package_toolbar_alter(&$items) {
 }
 
 /**
- * Implements hook_loft_deploy_title_pre_alter().
- *
- * Add the version to the title.
- */
-function web_package_loft_deploy_title_pre_alter(&$title) {
-  $version = Drupal::service('web_package')->getVersion();
-  $title .= t(' ~ @version', ['@version' => $version]);
-}
-
-/**
  * Implements hook_preprocess_status_report_general_info().
  */
 function web_package_preprocess_status_report_general_info(&$vars) {
