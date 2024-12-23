@@ -71,7 +71,7 @@ The query string var can be customized in _settings.php_ using:
 ## Upgrade Path Drupal 7 to 8
 
 * Replace all instances of `web_package_filepath` with `\Drupal::service('web_package')->getInfoFilepath()`
-* Replace all instances of `web_package_info` with `\Drupal::service('web_package')->getInfo()`
+* Replace all instances of `web_package_info` with the appropriate getter method, e.g. `getVersion`.
 * Replace all instances of `web_package_get_version` with `\Drupal::service('web_package')->getVersion()`
 * Replace all instances of `web_package_cache_buster_url` with `\Drupal::service('web_package')->createCacheBusterUrl()`
 * In _settings_ file change `$conf['web_package_filepath'] = DRUPAL_ROOT . '/../web_package.info';` to `$config['web_package.settings']['filepath'] = DRUPAL_ROOT . '/../web_package.info'`
